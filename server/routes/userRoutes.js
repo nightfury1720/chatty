@@ -1,7 +1,7 @@
 const {
     login,
     register,
-    // getAllUsers,
+    getAllUsers,
     setAvatar,
     // logOut,
   } = require("../controllers/userController");
@@ -10,7 +10,7 @@ const {
   
   router.post("/login", login);
   router.post("/register", register);
-//   router.get("/allusers/:id", getAllUsers);
+  router.get("/allusers/:id", getAllUsers);
   router.post("/setavatar/:id", setAvatar);
 //   router.get("/logout/:id", logOut);
   

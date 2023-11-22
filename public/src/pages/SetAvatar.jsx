@@ -8,8 +8,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { setAvatarRoute } from "../utils/APIRoutes";
 export default function SetAvatar() {
-  const api = `https://api.multiavatar.com/4645646`;
   const navigate = useNavigate();
+  const api = `https://api.multiavatar.com/4645646`;
   const [avatars, setAvatars] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedAvatar, setSelectedAvatar] = useState(undefined);
@@ -22,8 +22,17 @@ export default function SetAvatar() {
   };
 
   useEffect(() => {
-    if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY))
-      navigate("/login");
+    const funcCall = async () => {
+      const data = await JSON.parse(
+        localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
+      );
+      console.log("data local", data);
+      if (!data){
+        console.log("navigating to login");
+        navigate("/login");
+      }
+    };
+    funcCall();
   }, []);
 
   const setProfilePicture = async () => {
@@ -52,23 +61,10 @@ export default function SetAvatar() {
     }
   };
 
-  const dataCall = async () => {
-    const data = [];
-    for (let i = 0; i < 4; i++) {
-      const image = await axios.get(
-        `${api}/${Math.round(Math.random() * 1000)}`
-      );
-      const buffer = new Buffer(image.data);
-      data.push(buffer.toString("base64"));
-    }
-    console.log(data);
-    setAvatars(data);
-    setIsLoading(false);
-  };
   useEffect(() => {
     const dataCall = async () => {
       const data = [];
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < 1; i++) {
         const image = await axios.get(
           `${api}/${Math.round(Math.random() * 1000)}`
         );

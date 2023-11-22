@@ -9,6 +9,7 @@ import { loginRoute } from "../utils/APIRoutes";
 
 export default function Login() {
   const navigate = useNavigate();
+  console.log("I was in Login page");
   const [values, setValues] = useState({ username: "", password: "" });
   const toastOptions = {
     position: "bottom-right",
