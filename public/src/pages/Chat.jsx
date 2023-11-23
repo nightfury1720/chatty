@@ -4,12 +4,13 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 // import { io } from "socket.io-client";
 import { allUsersRoute, host } from "../utils/APIRoutes";
-// import ChatContainer from "../components/ChatContainer";
+import ChatContainer from "../components/ChatContainer";
 import Contacts from "../components/Contacts";
-// import Welcome from "../components/Welcome";
+import Welcome from "../components/Welcome";
 export default function Chat() {
   const navigate = useNavigate();
   const [contacts, setContacts] = useState([]);
+  const [currentChat, setCurrentChat] = useState(undefined);
   const [currentUser, setCurrentUser] = useState(undefined);
 
   console.log("I was in chat page");
@@ -50,11 +51,20 @@ export default function Chat() {
     funcCall();
   }, [currentUser]);
 
+  const handleChatChange = (chat) => {
+    setCurrentChat(chat);
+  };
   return (
     <Container>
-      <div className="chat-container"></div>
-      <Contacts contacts={contacts} />
-    </Container>
+        <div className="container">
+          <Contacts contacts={contacts} changeChat={handleChatChange} />
+          {currentChat === undefined ? (
+            <Welcome />
+          ) : (
+            <ChatContainer currentChat={currentChat} />
+          )}
+        </div>
+      </Container>
   );
 }
 
