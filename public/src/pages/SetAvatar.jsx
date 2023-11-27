@@ -26,9 +26,7 @@ export default function SetAvatar() {
       const data = await JSON.parse(
         localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
       );
-      console.log("data local", data);
       if (!data){
-        console.log("navigating to login");
         navigate("/login");
       }
     };

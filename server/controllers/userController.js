@@ -55,7 +55,6 @@ module.exports.getAllUsers = async (req, res, next) => {
 
 
 module.exports.setAvatar = async (req, res, next) => {
-  console.log("I am in set avatar");
   try {
     const userId = req.params.id;
     const avatarImage = req.body.image;
