@@ -10,40 +10,42 @@ require("dotenv").config();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URL, {
+mongoose
+  .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-}).then(() => {
+  })
+  .then(() => {
     console.log("DB connection successfull", process.env.MONGO_URL);
-}).catch((err) => console.log(err.message));
+  })
+  .catch((err) => console.log(err.message));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-const server =app.listen(process.env.PORT, () => {
-    console.log(`Server Started on Port ${process.env.PORT}`);
-})
+const server = app.listen(process.env.PORT, () => {
+  console.log(`Server Started on Port ${process.env.PORT}`);
+});
 
 const io = socket(server, {
-    cors: {
-      origin: "http://localhost:3000",
-      credentials: true,
-    },
+  cors: {
+    origin: "http://localhost:3000",
+    credentials: true,
+  },
+});
+
+global.onlineUsers = new Map();
+io.on("connection", (socket) => {
+  global.chatSocket = socket;
+  socket.on("add-user", (userId) => {
+    onlineUsers.set(userId, socket.id);
   });
-  
-  global.onlineUsers = new Map();
-  io.on("connection", (socket) => {
-    global.chatSocket = socket;
-    socket.on("add-user", (userId) => {
-      onlineUsers.set(userId, socket.id);
-    });
-  
-    socket.on("send-msg", (data) => {
-        console.log("send message", data);
-      const sendUserSocket = onlineUsers.get(data.to);
-      if (sendUserSocket) {
-        socket.to(sendUserSocket).emit("msg-recieve", data.msg);
-      }
-    });
+
+  socket.on("send-msg", (data) => {
+    console.log("send message", data);
+    const sendUserSocket = onlineUsers.get(data.to);
+    if (sendUserSocket) {
+      socket.to(sendUserSocket).emit("msg-recieve", data.msg);
+    }
   });
-  
+});
